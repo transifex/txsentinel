@@ -1,0 +1,6 @@
+env/
+instance/
+*.pyc
+values_testing.yaml
+.vscode/
+.docker-cache/

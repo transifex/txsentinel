@@ -1,0 +1,7 @@
+Flask==1.1.2
+github-webhook==1.0.4
+PyGithub==1.53
+uWSGI==2.0.19
+celery==5.0.2
+redis==3.5.3
+requests==2.25.0
