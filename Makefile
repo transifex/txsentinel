@@ -23,4 +23,4 @@ shell:
 	docker-compose run --rm txsentinel-web bash
 
 run-tests:
-	docker-compose run --rm txsentinel-web pytest
+	docker-compose run --rm --entrypoint 'bash -c' txsentinel-web 'coverage run -m pytest && coverage report'
