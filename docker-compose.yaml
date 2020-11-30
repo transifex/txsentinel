@@ -1,0 +1,26 @@
+version: '3'
+services:
+  txsentinel-web:
+    image: txsentinel
+    ports:
+      - "5000:5000"
+    volumes:
+      - './txsentinel:/home/sentinel/txsentinel'
+      - './tests:/home/sentinel/tests'
+    depends_on:
+      - cache
+    env_file:
+      - ./txsentinel.env
+
+  cache:
+    image: redis:6.0.5
+
+  txsentinel-worker:
+    image: txsentinel
+    command: celery --app txsentinel worker --loglevel INFO
+    volumes:
+      - './txsentinel:/home/sentinel/txsentinel'
+    depends_on:
+      - cache
+    env_file:
+      - ./txsentinel.env
