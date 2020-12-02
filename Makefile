@@ -24,3 +24,29 @@ shell:
 
 run-tests:
 	docker-compose run --rm --entrypoint 'bash -c' txsentinel-web 'coverage run -m pytest && coverage report'
+
+helm_debug:
+	helm install \
+		--dry-run \
+		--debug \
+		--generate-name \
+		-f helm/values_common.in.yaml \
+		--set-string version=${TAG} \
+		./helm/txsentinel
+
+helm_install:
+	helm upgrade \
+		--install \
+		--atomic \
+		-f ./helm/values_common.yaml \
+		--namespace dl-txsentinel \
+		--set-string version=${TAG} \
+		dl-txsentinel \
+		./helm/txsentinel
+
+ecr_login:
+	eval $$(aws ecr get-login --region eu-west-1 --no-include-email)
+
+ecr_push:
+	docker tag txsentinel:${TAG} 775662142440.dkr.ecr.eu-west-1.amazonaws.com/devops-league:${TAG} && \
+	docker push 775662142440.dkr.ecr.eu-west-1.amazonaws.com/devops-league:${TAG}

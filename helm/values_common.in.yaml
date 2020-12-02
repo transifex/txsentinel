@@ -1,0 +1,54 @@
+imageRepository: "775662142440.dkr.ecr.eu-west-1.amazonaws.com/devops-league"
+
+web:
+  replicas: 3
+  command:
+    - "/usr/local/bin/uwsgi"
+  commandArgs:
+    - "--ini"
+    - "./uwsgi.ini"
+  containerPort: 8080
+  requestsCpu: 100m
+  requestsMemory: 200Mi
+  limitsCpu: 500m
+  limitsMemory: 500Mi
+
+worker:
+  replicas: 1
+  command:
+    - "celery"
+  commandArgs:
+    - "--app=txsentinel"
+    - "worker"
+    - "loglevel=INFO"
+  requestsCpu: 100m
+  requestsMemory: 200Mi
+  limitsCpu: 500m
+  limitsMemory: 500Mi
+
+config:
+  SECRETS_PATH: "/etc/secrets-volume"
+  GITHUB_ORGANIZATION: "transifex"
+  GITHUB_USER: "wyngarde"
+  GITHUB_DEPLOY_HEAD: "devel"
+  GITHUB_DEPLOY_BASE: "master"
+  GITHUB_STALE_IGNORE_BRANCHES: "master,base,devel,beta,readonly"
+
+  CELERY_BROKER_URL: redis://devops-league-cache.ilveqw.ng.0001.euw1.cache.amazonaws.com:6379/0
+  CELERY_RESULT_BACKEND: redis://devops-league-cache.ilveqw.ng.0001.euw1.cache.amazonaws.com:6379/1
+
+  UWSGI_THREADS: 10
+  UWSGI_OFFLOAD_THREADS: 10
+  UWSGI_PROCESSES: 2
+
+secrets:
+  github-token: GITHUB_TOKEN
+  github-webhook-secret: GITHUB_WEBHOOK_SECRET
+  secret-key: SECRET_KEY
+  slack-signing-secret: SLACK_SIGNING_SECRET
+
+ingress:
+  certificateArns:
+    - arn:aws:acm:eu-west-1:775662142440:certificate/2c3f7899-dbba-48ae-bcf3-7727b7970279
+  hostNames:
+    - devops-l.svc.transifex.net
