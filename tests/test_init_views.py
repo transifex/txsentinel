@@ -5,7 +5,6 @@ def test_readiness():
     app = create_app()
     client = app.test_client()
     rv = client.get('/health')
-    print(rv.data)
     assert rv.data
 
 
@@ -14,5 +13,4 @@ def test_liveness():
     app = create_app()
     client = app.test_client()
     rv = client.get('/liveness')
-    print(rv.data)
     assert rv.data
