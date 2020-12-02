@@ -2,7 +2,7 @@ version: '3'
 
 services:
   redis:
-    image: nginx
+    image: redis:6.0.5
 
   txsentinel-web:
     image: txsentinel:latest
